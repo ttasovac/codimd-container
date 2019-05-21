@@ -1,1 +1,2 @@
 kubernetes/chart/charts/*.tgz
+resources/config.json
