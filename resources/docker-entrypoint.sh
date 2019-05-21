@@ -50,4 +50,4 @@ fi
 sleep 3
 
 # run
-exec gosu codimd "$@"
+exec gosu codimd "$@" 
