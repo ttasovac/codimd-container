@@ -1,8 +1,9 @@
-FROM node:8.15.0-alpine
+FROM node:8.15.1-alpine
 
 # Build arguments to change source url, branch or tag
-ARG CODIMD_REPOSITORY=https://github.com/hackmdio/codimd.git
+ARG CODIMD_REPOSITORY=https://github.com/codimd/server.git
 ARG VERSION=master
+ARG UID=10000
 
 # Set some default config variables
 ENV DOCKERIZE_VERSION=v0.6.1
@@ -50,7 +51,7 @@ RUN set -ex; \
 COPY resources/config.json resources/.sequelizerc /files/
 
 # Install all dependencies and build project
-RUN apk add --no-cache --virtual .dep build-base python git jq bash && \
+RUN apk add --no-cache --virtual .dep build-base openssl-dev python git jq bash && \
     # Clone the source
     git clone --depth 1 --branch "$VERSION" "$CODIMD_REPOSITORY" /codimd && \
     # Print the cloned version and clean up git files
@@ -76,7 +77,7 @@ RUN apk add --no-cache --virtual .dep build-base python git jq bash && \
     yarn install && \
     yarn cache clean && \
     apk del .dep && \
-    adduser -u 10000 -h /codimd/ -D -S codimd && \
+    adduser -u $UID -h /codimd/ -D -S codimd && \
     chown -R codimd /codimd/
 
 WORKDIR /codimd
